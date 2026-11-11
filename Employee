@@ -1,0 +1,134 @@
+// File Name: EmployeeManager.java
+import java.io.*;
+import java.util.*;
+
+public class EmployeeManager {
+
+    // Task 4: Refactored Duplicate File Read Logic into a Method
+    public static String readEmployeeData() {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(Constants.FILE_NAME)))) {
+            return reader.readLine();
+        } catch (Exception e) {
+            System.out.println("Error reading data: " + e.getMessage());
+            return "";
+        }
+    }
+
+    // Task 4: Refactored Duplicate File Write Logic into a Method
+    public static void writeEmployeeData(String data, boolean appendData) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.FILE_NAME, appendData))) {
+            writer.write(data);
+        } catch (Exception e) {
+            System.out.println("Error writing data: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        // Task 2: Application terminates early if the number of arguments is wrong
+        if (args.length == 0) {
+            System.out.println("Error: No arguments provided. Please provide a valid argument like 1, s, +, ?, c, u, d.");
+            return;
+        }
+
+        // Task 3: Meaningful variable name instead of args[0]
+        String operation = args[0]; 
+
+        if (operation.equals("1")) {
+            System.out.println("Loading data ...");
+            String employeeData = readEmployeeData();
+            if (employeeData != null) {
+                String[] employees = employeeData.split(Constants.DELIMITER);
+                for (String employee : employees) {
+                    System.out.println(employee.trim());
+                }
+            }
+            System.out.println("Data Loaded.");
+        } 
+        else if (operation.equals("s")) {
+            System.out.println("Loading data ...");
+            String employeeData = readEmployeeData();
+            if (employeeData != null) {
+                String[] employees = employeeData.split(Constants.DELIMITER);
+                Random random = new Random();
+                int randomIndex = random.nextInt(employees.length);
+                System.out.println(employees[randomIndex].trim());
+            }
+            System.out.println("Data Loaded.");
+        } 
+        else if (operation.startsWith("+")) {
+            System.out.println("Loading data ...");
+            String newEmployeeName = operation.substring(1);
+            writeEmployeeData(Constants.DELIMITER + " " + newEmployeeName, true);
+            System.out.println("Data Loaded.");
+        } 
+        else if (operation.startsWith("?")) {
+            System.out.println("Loading data ...");
+            String employeeData = readEmployeeData();
+            if (employeeData != null) {
+                String[] employees = employeeData.split(Constants.DELIMITER);
+                String searchName = operation.substring(1);
+                
+                // Task 7: Eliminated 'done' variable, improved search logic
+                boolean isFound = Arrays.stream(employees)
+                                        .map(String::trim)
+                                        .anyMatch(name -> name.equals(searchName));
+                
+                if (isFound) {
+                    System.out.println("Employee found!");
+                } else {
+                    System.out.println("Employee not found.");
+                }
+            }
+            System.out.println("Data Loaded.");
+        } 
+        else if (operation.equals("c")) {
+            System.out.println("Loading data ...");
+            String employeeData = readEmployeeData();
+            
+            // Task 8: Simplified the logic behind the count operation
+            if (employeeData != null && !employeeData.trim().isEmpty()) {
+                String[] words = employeeData.split(Constants.DELIMITER);
+                System.out.println(words.length + " word(s) found");
+            } else {
+                System.out.println("0 word(s) found");
+            }
+            System.out.println("Data Loaded.");
+        } 
+        else if (operation.startsWith("u")) {
+            System.out.println("Loading data ...");
+            String employeeData = readEmployeeData();
+            if (employeeData != null) {
+                String[] employees = employeeData.split(Constants.DELIMITER);
+                String updateName = operation.substring(1);
+                
+                for (int i = 0; i < employees.length; i++) {
+                    if (employees[i].trim().equals(updateName)) {
+                        employees[i] = " Updated";
+                    }
+                }
+                writeEmployeeData(String.join(Constants.DELIMITER, employees), false);
+            }
+            System.out.println("Data Updated.");
+        } 
+        else if (operation.startsWith("d")) {
+            System.out.println("Loading data ...");
+            String employeeData = readEmployeeData();
+            if (employeeData != null) {
+                String[] employees = employeeData.split(Constants.DELIMITER);
+                String deleteName = operation.substring(1);
+                
+                List<String> employeeList = new ArrayList<>();
+                for (String emp : employees) {
+                    if (!emp.trim().equals(deleteName)) {
+                        employeeList.add(emp);
+                    }
+                }
+                writeEmployeeData(String.join(Constants.DELIMITER, employeeList), false);
+            }
+            System.out.println("Data Deleted.");
+        } 
+        else {
+            // Task 9: Handling for invalid arguments
+            System.out.println("Error: Invalid argument provided. Valid arguments are 1, s, +, ?, c, u, d.");
+        }
+    }
