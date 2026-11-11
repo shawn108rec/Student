@@ -1,5 +1,4 @@
-[7:21 pm, 11/11/2026] Mehedi Hasan Shawn: নীরব আমাকে একটু slove গুলা পাঠা তো।
-[7:32 pm, 11/11/2026] @nirob__r__12: import java.io.*;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
