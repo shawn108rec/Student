@@ -1,0 +1,6 @@
+// File Name: Constants.java
+public class Constants {
+    // Defines constants for file path and delimiter
+    public static final String FILE_NAME = "employees.txt";
+    public static final String DELIMITER = ",";
+}
